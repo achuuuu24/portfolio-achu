@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BingeGlobe — World Web Series Guide, Summaries & Reviews</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome for modern icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <i class="fa-solid fa-clapperboard logo-icon"></i>
+        <span>Binge<span class="highlight">Globe</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#browse" class="active"><i class="fa-solid fa-compass"></i> Explore</a>
+        <a href="#stats"><i class="fa-solid fa-chart-pie"></i> Insights</a>
+        <button id="openAddModalBtn" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> Add Series
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="hero-backdrop"></div>
+    <div class="hero-content">
+      <div class="badge-hero">
+        <i class="fa-solid fa-globe"></i> Global Streaming Encyclopedia
+      </div>
+      <h1>Explore Top Web Series <br>From Around The World</h1>
+      <p>Instant summaries, critical reviews, ratings, cast details, and platform availability for iconic series across USA, UK, Korea, Spain, India, Germany, and beyond.</p>
+
+      <!-- Search & Quick Filters -->
+      <div class="search-box-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search by series name, genre, country, cast, or platform (e.g., 'Dark', 'Crime', 'Korea')..."
+          autocomplete="off"
+        >
+        <button id="clearSearchBtn" class="clear-btn" title="Clear search" style="display: none;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Quick Platform Filter Pills -->
+      <div class="quick-tags">
+        <span class="tag-label"><i class="fa-solid fa-sliders"></i> Filter by:</span>
+        <button class="filter-pill active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="Netflix">Netflix</button>
+        <button class="filter-pill" data-filter="HBO">HBO / Max</button>
+        <button class="filter-pill" data-filter="Amazon Prime">Prime Video</button>
+        <button class="filter-pill" data-filter="Apple TV+">Apple TV+</button>
+        <button class="filter-pill" data-filter="BBC">BBC</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="main-container" id="browse">
+    
+    <!-- Controls Bar (Genre filter, Country filter, Sorting, View toggles) -->
+    <div class="controls-bar">
+      <div class="controls-left">
+        <!-- Genre Dropdown -->
+        <div class="select-group">
+          <label for="genreSelect"><i class="fa-solid fa-masks-theater"></i> Genre:</label>
+          <select id="genreSelect">
+            <option value="all">All Genres</option>
+            <option value="Drama">Drama</option>
+            <option value="Crime">Crime</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Action">Action</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Historical">Historical</option>
+            <option value="Romance">Romance</option>
+          </select>
+        </div>
+
+        <!-- Country / Origin Dropdown -->
+        <div class="select-group">
+          <label for="countrySelect"><i class="fa-solid fa-flag"></i> Country:</label>
+          <select id="countrySelect">
+            <option value="all">All Countries</option>
+            <option value="USA">United States</option>
+            <option value="UK">United Kingdom</option>
+            <option value="South Korea">South Korea</option>
+            <option value="Spain">Spain</option>
+            <option value="Germany">Germany</option>
+            <option value="India">India</option>
+            <option value="Japan">Japan</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <!-- Sorting -->
+        <div class="select-group">
+          <label for="sortSelect"><i class="fa-solid fa-arrow-down-wide-short"></i> Sort By:</label>
+          <select id="sortSelect">
+            <option value="rating-desc">Highest Rated (IMDb)</option>
+            <option value="year-desc">Newest Release</option>
+            <option value="title-asc">Title (A - Z)</option>
+            <option value="title-desc">Title (Z - A)</option>
+          </select>
+        </div>
+
+        <div class="count-badge">
+          Showing: <strong id="resultsCount">0</strong> series
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filter Tags Display -->
+    <div id="activeFiltersContainer" class="active-filters" style="display: none;">
+      <span>Active Filters:</span>
+      <div id="activeFilterTags" class="tags-list"></div>
+      <button id="resetFiltersBtn" class="reset-btn">Reset All</button>
+    </div>
+
+    <!-- Web Series Grid -->
+    <div id="seriesGrid" class="series-grid">
+      <!-- Dynamic cards injected via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="noResults" class="no-results" style="display: none;">
+      <i class="fa-solid fa-film-slash no-results-icon"></i>
+      <h3>No Web Series Found</h3>
+      <p>We couldn't find any series matching your current search or filter criteria.</p>
+      <button id="emptyStateResetBtn" class="btn btn-secondary">Clear Filters</button>
+    </div>
+
+    <!-- Global Stats Section -->
+    <section class="stats-section" id="stats">
+      <div class="section-header">
+        <h2>Global Web Series Insights</h2>
+        <p>Curated repository covering award-winning storylines across the globe</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fa-solid fa-tv stat-icon"></i>
+          <h3 id="statTotalSeries">0</h3>
+          <p>Total Curated Series</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-earth-americas stat-icon"></i>
+          <h3 id="statTotalCountries">0</h3>
+          <p>Countries Represented</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-star stat-icon"></i>
+          <h3 id="statAvgRating">0.0</h3>
+          <p>Average IMDb Score</p>
+        </div>
+        <div class="stat-card">
+          <i class="fa-solid fa-clapperboard stat-icon"></i>
+          <h3 id="statTotalGenres">0</h3>
+          <p>Genres Covered</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Series Detail Modal (Popup with Full Summary & In-Depth Review) -->
+  <div id="detailModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div id="modalBody" class="modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Series Modal -->
+  <div id="addModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card add-modal-card">
+      <button class="modal-close" id="addModalCloseBtn" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-circle-plus"></i> Add a Web Series</h2>
+        <p>Contribute a new web series to your global encyclopedia.</p>
+      </div>
+
+      <form id="addSeriesForm" class="add-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="newTitle">Series Title *</label>
+            <input type="text" id="newTitle" required placeholder="e.g., Arcane">
+          </div>
+          <div class="form-group">
+            <label for="newCountry">Origin Country *</label>
+            <input type="text" id="newCountry" required placeholder="e.g., USA, South Korea, France">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="newYear">Release Years *</label>
+            <input type="text" id="newYear" required placeholder="e.g., 2021 - Present">
+          </div>
+          <div class="form-group">
+            <label for="newPlatform">Platform *</label>
+            <input type="text" id="newPlatform" required placeholder="e.g., Netflix, HBO, Prime Video">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="newGenres">Genres (comma separated) *</label>
+            <input type="text" id="newGenres" required placeholder="e.g., Animation, Action, Sci-Fi">
+          </div>
+          <div class="form-group">
+            <label for="newImdb">IMDb Rating (out of 10) *</label>
+            <input type="number" step="0.1" min="1" max="10" id="newImdb" required placeholder="e.g., 9.0">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="newSeasons">Seasons & Episodes *</label>
+            <input type="text" id="newSeasons" required placeholder="e.g., 2 Seasons (18 Episodes)">
+          </div>
+          <div class="form-group">
+            <label for="newCreator">Creator / Showrunner</label>
+            <input type="text" id="newCreator" placeholder="e.g., Christian Linke, Alex Yee">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newCast">Key Cast (comma separated)</label>
+          <input type="text" id="newCast" placeholder="e.g., Hailee Steinfeld, Ella Purnell">
+        </div>
+
+        <div class="form-group">
+          <label for="newSummary">Short Summary / Synopsis *</label>
+          <textarea id="newSummary" rows="3" required placeholder="Provide a quick synopsis of the plot and core premise..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="newReview">Comprehensive Review & Verdict *</label>
+          <textarea id="newReview" rows="4" required placeholder="What makes this web series standout? Highlight acting, direction, storytelling, and audience impact..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelAddBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Series</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="logo">
+          <i class="fa-solid fa-clapperboard logo-icon"></i>
+          <span>Binge<span class="highlight">Globe</span></span>
+        </div>
+        <p>The definitive open catalog for world web series reviews, plot summaries, ratings, and streaming information.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Popular Genres</h4>
+        <ul>
+          <li><a href="#browse" onclick="filterByGenre('Crime')">Crime & Mystery</a></li>
+          <li><a href="#browse" onclick="filterByGenre('Sci-Fi')">Sci-Fi & Fantasy</a></li>
+          <li><a href="#browse" onclick="filterByGenre('Drama')">Critically Acclaimed Drama</a></li>
+          <li><a href="#browse" onclick="filterByGenre('Thriller')">Psychological Thrillers</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Top Regions</h4>
+        <ul>
+          <li><a href="#browse" onclick="filterByCountry('USA')">United States</a></li>
+          <li><a href="#browse" onclick="filterByCountry('South Korea')">South Korean K-Dramas</a></li>
+          <li><a href="#browse" onclick="filterByCountry('UK')">British Television</a></li>
+          <li><a href="#browse" onclick="filterByCountry('India')">Indian Web Series</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BingeGlobe. Curated for web series enthusiasts worldwide.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
